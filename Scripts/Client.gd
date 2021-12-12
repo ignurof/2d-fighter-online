@@ -2,6 +2,7 @@ extends Node
 
 signal clientConnect
 signal spawnPlayers
+signal syncPlayers
 
 var serverData: Dictionary
 
@@ -55,6 +56,8 @@ func _on_data() -> void:
 	serverData = _client.get_peer(1).get_var()
 	print(serverData)
 	clientConnect()
+	spawnPlayers()
+	syncPlayers()
 
 func _process(delta) -> void:
 	# Call this in _process or _physics_process. Data transfer, and signals
@@ -81,3 +84,6 @@ func clientConnect() -> void:
 func spawnPlayers() -> void:
 	if serverData.network.func == "spawnPlayers":
 		emit_signal("spawnPlayers")
+
+func syncPlayers() -> void:
+	emit_signal("syncPlayers")
