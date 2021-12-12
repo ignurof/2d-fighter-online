@@ -44,3 +44,4 @@ func syncEntities() -> void:
 				# Position movement sync
 				activePlayers[x].position.x = list[x].x
 				activePlayers[x].position.y = list[x].y
+				activePlayers[x].flip(list[x].flipH)

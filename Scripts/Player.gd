@@ -18,8 +18,18 @@ func movement() -> void:
 	#var attack = Input.is_action_pressed("ui_up")
 	velocity.x -= int(Input.is_action_pressed("left")) - int(Input.is_action_pressed("right"))
 	
+	# Set local player flip value
+	if velocity.x < 0:
+		$AnimatedSprite.flip_h = true
+	if velocity.x > 0:
+		$AnimatedSprite.flip_h = false
+	
 	# apply speed velocity
 	velocity.x *= moveSpeed
+
+func flip(newValue) -> void:
+	$AnimatedSprite.flip_h = newValue
+	print($AnimatedSprite.flip_h)
 
 func jump() -> void:
 	# Reset counter
@@ -34,7 +44,7 @@ func jump() -> void:
 func _physics_process(delta) -> void:
 	if localPlayer:
 		# Apply gravity force
-		#velocity.y += gravity * delta
+		velocity.y += gravity * delta
 			
 		# Get input
 		movement()
@@ -53,4 +63,10 @@ func sendPosition() -> void:
 		Client.clientData.network.func = "clientPos"
 		Client.clientData.movement.x = position.x
 		Client.clientData.movement.y = position.y
+		# Different type of data that may want to be sent elsewhere
+		playerDataToSend()
 		Client.send()
+
+func playerDataToSend() -> void:
+	Client.clientData.movement.anim = "name"
+	Client.clientData.movement.flipH = $AnimatedSprite.flip_h

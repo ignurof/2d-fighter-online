@@ -13,7 +13,10 @@ var clientData: Dictionary = {
 	},
 	"movement": {
 		"x": 0,
-		"y": 0
+		"y": 0,
+		"anim": "nameHere",
+		"flipH": false,
+		"attacking": false
 	},
 	"id": "clientIDHere"
 }
