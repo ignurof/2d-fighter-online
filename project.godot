@@ -14,6 +14,10 @@ config/name="2d-fighter-online"
 run/main_scene="res://Scenes/Root.tscn"
 config/icon="res://icon.png"
 
+[autoload]
+
+Client="*res://Scripts/Client.gd"
+
 [display]
 
 window/size/width=480

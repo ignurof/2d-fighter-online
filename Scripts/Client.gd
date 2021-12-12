@@ -1,8 +1,9 @@
 extends Node
 
 signal clientConnect
+signal spawnPlayers
 
-var serverData = null
+var serverData: Dictionary
 
 var clientData: Dictionary = {
 	"network": {
@@ -17,10 +18,10 @@ var clientData: Dictionary = {
 }
 
 # The URL we will connect to
-export var websocket_url = "ws://echo.websocket.org"
+export var websocket_url = "ws://localhost:9090"
 
 # Our WebSocketClient instance
-var _client: WebSocketClient = WebSocketClient.new()
+onready var _client: WebSocketClient = WebSocketClient.new()
 
 func _ready() -> void:
 	# Connect base signals to get notified of connection open, close, and errors.
@@ -31,12 +32,6 @@ func _ready() -> void:
 	# a full packet is received.
 	# Alternatively, you could check get_peer(1).get_available_packets() in a loop.
 	_client.connect("data_received", self, "_on_data")
-
-	# Initiate connection to the given URL.
-	var err = _client.connect_to_url(websocket_url)
-	if err != OK:
-		print("Unable to connect")
-		set_process(false)
 
 func _closed(was_clean = false) -> void:
 	# was_clean will tell you if the disconnection was correctly notified
@@ -56,13 +51,23 @@ func _on_data() -> void:
 	# Print the received packet, you MUST always use get_peer(1).get_packet
 	# to receive data from server, and not get_packet directly when not
 	# using the MultiplayerAPI.
-	print("Got data from server: ", _client.get_peer(1).get_packet().get_string_from_utf8())
+	#print("Got data from server: ", _client.get_peer(1).get_packet().get_string_from_utf8())
 	serverData = _client.get_peer(1).get_var()
+	print(serverData)
+	clientConnect()
 
 func _process(delta) -> void:
 	# Call this in _process or _physics_process. Data transfer, and signals
 	# emission will only happen when calling this function.
 	_client.poll()
+
+# Opens the connection to the server
+func openConnection() -> void:
+	# Initiate connection to the given URL.
+	var err = _client.connect_to_url(websocket_url)
+	if err != OK:
+		print("Unable to connect")
+		set_process(false)
 
 func send() -> void:
 	_client.get_peer(1).put_var(clientData)
@@ -72,3 +77,7 @@ func clientConnect() -> void:
 	if serverData.network.func == "clientConnect":
 		clientData.id = serverData.network.data
 		emit_signal("clientConnect")
+
+func spawnPlayers() -> void:
+	if serverData.network.func == "spawnPlayers":
+		emit_signal("spawnPlayers")
