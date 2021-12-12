@@ -44,4 +44,9 @@ func syncEntities() -> void:
 				# Position movement sync
 				activePlayers[x].position.x = list[x].x
 				activePlayers[x].position.y = list[x].y
+				activePlayers[x].animSprite.play(list[x].anim)
 				activePlayers[x].flip(list[x].flipH)
+				activePlayers[x].attackFX(list[x].attacking)
+			
+			# Sync HP on all clients including local player
+			activePlayers[x].health = list[x].hp
