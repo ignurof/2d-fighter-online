@@ -54,7 +54,6 @@ func _on_data() -> void:
 	# using the MultiplayerAPI.
 	#print("Got data from server: ", _client.get_peer(1).get_packet().get_string_from_utf8())
 	serverData = _client.get_peer(1).get_var()
-	print(serverData)
 	clientConnect()
 	spawnPlayers()
 	syncPlayers()
@@ -80,10 +79,12 @@ func clientConnect() -> void:
 	if serverData.network.func == "clientConnect":
 		clientData.id = serverData.network.data
 		emit_signal("clientConnect")
+		print("clientConnect")
 
 func spawnPlayers() -> void:
 	if serverData.network.func == "spawnPlayers":
 		emit_signal("spawnPlayers")
+		print("spawnPlayers")
 
 func syncPlayers() -> void:
 	emit_signal("syncPlayers")

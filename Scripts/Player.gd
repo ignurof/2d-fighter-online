@@ -1,5 +1,7 @@
 extends KinematicBody2D
 
+var localPlayer: bool = false
+
 var velocity: Vector2
 
 var moveSpeed: int = ((64 / 2) * 3)
@@ -30,19 +32,20 @@ func jump() -> void:
 		velocity.y = -jumpForce + -64
 
 func _physics_process(delta) -> void:
-	# Apply gravity force
-	#velocity.y += gravity * delta
-		
-	# Get input
-	movement()
-	# move_and_slide() automatically includes the timestep in its calculation, so you should not multiply the velocity vector by delta.
-	# specified -Y as UP
-	velocity = move_and_slide(velocity, Vector2(0, -1))
-	#attack()
-	jump()
-	#
-	#setAnimation()
-	sendPosition()
+	if localPlayer:
+		# Apply gravity force
+		#velocity.y += gravity * delta
+			
+		# Get input
+		movement()
+		# move_and_slide() automatically includes the timestep in its calculation, so you should not multiply the velocity vector by delta.
+		# specified -Y as UP
+		velocity = move_and_slide(velocity, Vector2(0, -1))
+		#attack()
+		jump()
+		#
+		#setAnimation()
+		sendPosition()
 
 func sendPosition() -> void:
 	# Only send on movement
